@@ -1,10 +1,13 @@
-import React, { FormEventHandler, KeyboardEventHandler } from 'react';
+import React, {ChangeEventHandler, FormEventHandler, KeyboardEventHandler} from 'react';
 import { useUnsplashSearch } from "./Hooks/searchHooks";
 import { SearchBar } from "./Components/SearchBar/SearchBar";
 import {SearchResultsList} from "./Components/SearchResults/SearchResultsList";
 
 import './App.css';
 import {Pagination} from "./Components/Pagination/Pagination";
+import ColorFilter from "./Components/ColorFilter/ColorFilter";
+import {ColorId, SearchOrderBy} from "unsplash-js";
+import OrderBy from "./Components/OrderBy/OrderBy";
 
 function App() {
   const {
@@ -15,12 +18,15 @@ function App() {
     searchTerm,
     numPages,
     setPage,
-    page
+    page,
+    color,
+    setColor,
+    orderBy,
+    setOrderBy
   } = useUnsplashSearch();
 
   const handleInputChange: FormEventHandler<HTMLInputElement> = (e) => {
     const {value} = e.currentTarget;
-
     setSearchTerm(value);
   }
 
@@ -29,6 +35,21 @@ function App() {
       setPage(1);
       setIsSearching(true);
     }
+  }
+
+  const handleColorChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    const {value} = e.currentTarget;
+    let newColor: ColorId | undefined;
+    if (value !== "") {
+      newColor = value as ColorId;
+    }
+    setColor(newColor);
+    setIsSearching(true);
+  }
+
+  const handleOrderChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    setOrderBy(e.currentTarget.value as SearchOrderBy);
+    setIsSearching(true);
   }
 
   const userHasSearched = !isSearching && photos !== null;
@@ -44,8 +65,11 @@ function App() {
             handleInputChange={handleInputChange}
             handleEnterPress={handleEnterPress}
         />
-        { !userHasSearched && !isSearching? <p className="status-indicator">👀</p> : null }
-        { isSearching ? <p className="status-indicator">🕵🏻‍♂️</p> : null }
+        <ColorFilter activeColor={color} handleChange={handleColorChange} />
+        <OrderBy currentOrder={orderBy} handleChange={handleOrderChange} />
+
+        { !userHasSearched && !isSearching ? <p className="status-indicator">👀</p> : null }
+        { isSearching && searchTerm !== "" ? <p className="status-indicator">🕵🏻‍♂️</p> : null }
         { shouldDisplayEmptyResults ? <p className="status-indicator">No results <br/> 🙅</p> : null}
         { shouldDisplayResults ? (
           <>
