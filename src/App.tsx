@@ -1,7 +1,9 @@
 import React, { FormEventHandler, KeyboardEventHandler } from 'react';
-import './App.css';
 import { useUnsplashSearch } from "./Hooks/searchHooks";
 import { SearchBar } from "./Components/SearchBar";
+import {SearchResultsList} from "./Components/SearchResults/SearchResultsList";
+
+import './App.css';
 
 function App() {
   const { photos, setIsSearching, setSearchTerm, isSearching, searchTerm } = useUnsplashSearch();
@@ -18,6 +20,10 @@ function App() {
     }
   }
 
+  const userHasSearched = !isSearching && photos !== null;
+  const shouldDisplayResults = userHasSearched && photos.length > 0;
+  const shouldDisplayEmptyResults = userHasSearched && photos?.length === 0;
+
   return (
     <div className="App">
       <SearchBar
@@ -25,11 +31,8 @@ function App() {
         handleInputChange={handleInputChange}
         handleEnterPress={handleEnterPress}
       />
-      { photos && photos.length > 0 ?
-          (<div>{photos.map(p => p.urls ? <img src={p.urls.regular} alt={p.alt_description || ""} /> : null)}</div>)
-        : null
-      }
-      { !isSearching && photos?.length === 0 ? "no results :(" : null}
+      { shouldDisplayResults ? <SearchResultsList results={photos} /> : null }
+      { shouldDisplayEmptyResults ? "no results :(" : null}
     </div>
   );
 }
