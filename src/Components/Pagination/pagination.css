@@ -1,0 +1,13 @@
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    p {
+        cursor: pointer;
+    }
+
+    .active {
+        color: red;
+    }
+}

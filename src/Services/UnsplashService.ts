@@ -2,6 +2,10 @@ import { createApi } from 'unsplash-js';
 import { NoAccessKeyError } from "./errors";
 
 type UnsplashApi = ReturnType<typeof createApi>;
+type GetPhotosForSearchTermArgs = {
+    searchTerm: string;
+    page: number;
+}
 class UnsplashService {
     private api: UnsplashApi
 
@@ -15,8 +19,11 @@ class UnsplashService {
         });
     }
 
-    getPhotosForSearchTerm = async (searchTerm: string) => {
-        const result = await this.api.search.getPhotos({query: searchTerm});
+    getPhotosForSearchTerm = async ({ searchTerm, page }: GetPhotosForSearchTermArgs) => {
+        const result = await this.api.search.getPhotos({
+            query: searchTerm,
+            page,
+        });
         return result.response;
     }
 

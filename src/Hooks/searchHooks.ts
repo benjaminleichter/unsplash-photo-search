@@ -7,20 +7,24 @@ export const useUnsplashSearch = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [photos, setPhotos] = useState<Array<Basic> | null>(null)
     const [isSearching, setIsSearching] = useState(false);
+    const [page, setPage] = useState(1);
+    const [numPages, setNumPages] = useState(0);
 
     useEffect(() => {
         if (isSearching) {
-            unsplashService.getPhotosForSearchTerm(searchTerm).then((res) => {
+            unsplashService.getPhotosForSearchTerm({searchTerm, page}).then((res) => {
                 setIsSearching(false);
                 if (typeof res !== "undefined") {
                     setPhotos(res.results);
+                    setNumPages(res.total_pages)
                     return;
                 }
 
                 setPhotos([]);
+                setNumPages(0);
             });
         }
-    }, [isSearching, searchTerm, unsplashService]);
+    }, [isSearching, page, searchTerm, unsplashService]);
 
-    return { setSearchTerm, searchTerm, setIsSearching, isSearching, photos };
+    return { setSearchTerm, searchTerm, setIsSearching, isSearching, photos, numPages, setPage, page };
 }
