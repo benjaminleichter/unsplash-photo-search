@@ -1,11 +1,12 @@
-import React, {FormEvent, KeyboardEventHandler} from 'react';
+import React, { FormEventHandler, KeyboardEventHandler } from 'react';
 import './App.css';
-import {useUnsplashSearch} from "./Hooks/searchHooks";
+import { useUnsplashSearch } from "./Hooks/searchHooks";
+import { SearchBar } from "./Components/SearchBar";
 
 function App() {
   const { photos, setIsSearching, setSearchTerm, isSearching, searchTerm } = useUnsplashSearch();
 
-  const handleInputChange = (e: FormEvent<HTMLInputElement>) => {
+  const handleInputChange: FormEventHandler<HTMLInputElement> = (e) => {
     const {value} = e.currentTarget;
 
     setSearchTerm(value);
@@ -19,7 +20,11 @@ function App() {
 
   return (
     <div className="App">
-      <input type="search" onInput={handleInputChange} defaultValue={searchTerm} onKeyDown={handleEnterPress} />
+      <SearchBar
+        defaultValue={searchTerm}
+        handleInputChange={handleInputChange}
+        handleEnterPress={handleEnterPress}
+      />
       { photos && photos.length > 0 ?
           (<div>{photos.map(p => p.urls ? <img src={p.urls.regular} alt={p.alt_description || ""} /> : null)}</div>)
         : null
