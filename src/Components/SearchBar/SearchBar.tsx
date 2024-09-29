@@ -1,5 +1,7 @@
 import React, {FormEventHandler, KeyboardEventHandler} from "react";
 
+import "./searchBar.css";
+
 type SearchBarProps = {
     defaultValue: string;
     handleInputChange: FormEventHandler<HTMLInputElement>;
@@ -13,7 +15,8 @@ export const SearchBar = (
     }: SearchBarProps
 ) => (
     <input
-        type="search"
+        className="search-bar"
+        type="text"
         onInput={handleInputChange}
         defaultValue={defaultValue}
         onKeyDown={handleEnterPress}
